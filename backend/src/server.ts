@@ -1,10 +1,12 @@
 import express, { type Request, type Response } from "express";
 import connectDB from "./config/db";
+import cors from "cors";
 
 import SurahRoutes from "./routes/surahRoutes";
 import AyahRoutes from "./routes/ayahRoutes";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 9000;
 

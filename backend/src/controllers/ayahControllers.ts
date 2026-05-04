@@ -3,7 +3,7 @@ import Ayah from "../models/Ayah";
 
 export const getAllAyahs = async (req: Request, res: Response) => {
   try {
-    const ayahs = await Ayah.find();
+    const ayahs = await Ayah.find().populate("surah");
 
     if (ayahs.length === 0) {
       return res.status(404).json({
