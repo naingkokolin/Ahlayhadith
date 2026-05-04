@@ -14,6 +14,7 @@ const surahSchema = new mongoose.Schema<ISurah>(
       type: Number,
       required: true,
       index: true,
+      unique: true,
     },
     name_ar: {
       type: String,
