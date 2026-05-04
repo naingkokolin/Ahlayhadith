@@ -1,0 +1,9 @@
+admin/node_modules
+admin/.env
+
+backend/node_modules
+backend/.env
+
+mobile/node_modules
+mobile/.env
+
