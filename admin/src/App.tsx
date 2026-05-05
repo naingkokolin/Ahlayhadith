@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ISurah, IAyah, Page } from "./types";
+import { ISurah, IAyah, Page, getSurahId } from "./types";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import SurahsPage from "./pages/SurahsPage";
@@ -173,7 +173,7 @@ const App: React.FC = () => {
     try {
       await apiDeleteSurah(id);
       setSurahs((prev) => prev.filter((s) => s._id !== id));
-      setAyahs((prev) => prev.filter((a) => a.surah !== id));
+      setAyahs((prev) => prev.filter((a) => getSurahId(a.surah) !== id));
     } catch {
       setError("Failed to delete surah.");
     }
@@ -183,7 +183,6 @@ const App: React.FC = () => {
   const addAyah = async (data: Omit<IAyah, "_id">) => {
     try {
       const res = await createAyah(data as IAyah);
-      // createAyah response wraps the new ayah in `res.data.surah` (per api.ts)
       setAyahs((prev) =>
         [...prev, res.data.ayah].sort((a, b) => a.ayah_number - b.ayah_number),
       );

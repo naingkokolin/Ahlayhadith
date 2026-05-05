@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { ISurah, IAyah } from "../types";
+import { ISurah, IAyah, getSurahId } from "../types";
 import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
 
@@ -42,7 +42,9 @@ const AyahsPage: React.FC<Props> = ({
   const currentSurah = surahs.find((s) => s._id === selectedSurahId);
 
   const filtered = useMemo(() => {
-    const surahAyahs = ayahs.filter((a) => a.surah === selectedSurahId);
+    const surahAyahs = ayahs.filter(
+      (a) => getSurahId(a.surah) === selectedSurahId,
+    );
     const q = search.toLowerCase();
     return q
       ? surahAyahs.filter(
@@ -68,7 +70,7 @@ const AyahsPage: React.FC<Props> = ({
   const openEdit = (a: IAyah) => {
     setEditingId(a._id ?? null);
     setForm({
-      surah: a.surah,
+      surah: getSurahId(a.surah),
       ayah_number: a.ayah_number,
       text_ar: a.text_ar,
       text_mm: a.text_mm,
@@ -237,7 +239,7 @@ const AyahsPage: React.FC<Props> = ({
             <label className="field-label">Surah</label>
             <select
               className="field-input select-input"
-              value={form.surah}
+              value={form.surah as string}
               onChange={(e) => setF("surah", e.target.value)}
             >
               {surahs.map((s) => (

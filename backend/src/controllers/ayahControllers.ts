@@ -24,8 +24,7 @@ export const addAyah = async (req: Request, res: Response) => {
     const { surah, ayah_number, text_ar, text_mm } = req.body;
     const newAyah = await Ayah.create({ surah, ayah_number, text_ar, text_mm });
     res.status(201).json({
-      message: "New Ayah Added",
-      newAyah,
+      ayah: newAyah,
     });
   } catch (error) {
     res.status(500).json({
@@ -62,8 +61,7 @@ export const updateAyahById = async (req: Request, res: Response) => {
         message: `No updated ayah`,
       });
     res.status(200).json({
-      message: "Ayah updated",
-      updatedAyah,
+      ayah: updatedAyah,
     });
   } catch (error) {
     res.status(500).json({

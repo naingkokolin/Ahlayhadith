@@ -30,7 +30,6 @@ export const addSurah = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-      message: "New Surah added Successfully",
       surah: newSurah,
     });
   } catch (error) {
@@ -89,8 +88,7 @@ export const updateSurahById = async (req: Request, res: Response) => {
         message: `No Surah found with this id: ${id}!`,
       });
     res.status(200).json({
-      message: "Surah updated",
-      updatedSurah,
+      surah: updatedSurah,
     });
   } catch (error) {
     res.status(500).json({
