@@ -2,7 +2,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ISurah, IAyah } from "../types";
 
-const API_URL = "http://localhost:8000/api"; // ← updated to port 8000
+const API_URL = "https://ahlayhadith.onrender.com/api"; // ← updated to port 8000
 
 const api = axios.create({
   baseURL: API_URL,
