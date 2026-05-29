@@ -1,21 +1,46 @@
 import { Request, Response } from "express";
 import Ayah from "../models/Ayah";
 
+// export const getAllAyahs = async (req: Request, res: Response) => {
+//   try {
+//     const ayahs = await Ayah.find().populate("surah");
+
+//     if (ayahs.length === 0) {
+//       return res.status(404).json({
+//         message: "No Ayah found in the database",
+//       });
+//     }
+//     res.status(200).json({ ayahs });
+//   } catch (error) {
+//     const err = error as Error;
+//     res.status(500).json({
+//       error: `Error while getting all ayahs: ${err.message}`,
+//     });
+//   }
+// };
+
 export const getAllAyahs = async (req: Request, res: Response) => {
   try {
-    const ayahs = await Ayah.find().populate("surah");
+    const filter: Record<string, any> = {};
 
-    if (ayahs.length === 0) {
-      return res.status(404).json({
-        message: "No Ayah found in the database",
-      });
+    // ၂။ surah query ပါလာမှ string ပြောင်းပြီး filter ထဲ ထည့်မယ်
+    if (req.query.surah) {
+      filter.surah = String(req.query.surah);
     }
+
+    const ayahs = await Ayah.find(filter)
+      .populate("surah")
+      .sort({ ayah_number: 1 }); // ← important: show in order
+
+    if (ayahs.length === 0)
+      return res.status(404).json({ message: "No Ayah found in the database" });
+
     res.status(200).json({ ayahs });
   } catch (error) {
     const err = error as Error;
-    res.status(500).json({
-      error: `Error while getting all ayahs: ${err.message}`,
-    });
+    res
+      .status(500)
+      .json({ error: `Error while getting all ayahs: ${err.message}` });
   }
 };
 

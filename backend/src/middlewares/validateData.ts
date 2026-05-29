@@ -42,3 +42,80 @@ export const validateAyah = (
   }
   next();
 };
+
+export const validateHadithBook = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { book_number, name_ar, name_mm, name_en, author, totalHadith } =
+    req.body;
+  if (
+    !book_number ||
+    !name_ar ||
+    !name_mm ||
+    !name_en ||
+    !author ||
+    !totalHadith
+  ) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+  if (
+    typeof book_number !== "number" ||
+    typeof totalHadith !== "number" ||
+    book_number <= 0 ||
+    totalHadith <= 0
+  ) {
+    return res.status(400).json({
+      message: "book_number and totalHadith must be positive integers",
+    });
+  }
+  next();
+};
+
+export const validateHadithChapter = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { book, chapter_number, name_ar, name_mm, name_en, totalHadith } =
+    req.body;
+  if (
+    !book ||
+    !chapter_number ||
+    !name_ar ||
+    !name_mm ||
+    !name_en ||
+    !totalHadith
+  ) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+  if (
+    typeof chapter_number !== "number" ||
+    typeof totalHadith !== "number" ||
+    chapter_number <= 0 ||
+    totalHadith <= 0
+  ) {
+    return res.status(400).json({
+      message: "chapter_number and totalHadith must be positive integers",
+    });
+  }
+  next();
+};
+
+export const validateHadith = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { book, chapter, hadith_number, text_ar, text_mm } = req.body;
+  if (!book || !chapter || !hadith_number || !text_ar || !text_mm) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+  if (typeof hadith_number !== "number" || hadith_number <= 0) {
+    return res
+      .status(400)
+      .json({ message: "hadith_number must be a positive integer" });
+  }
+  next();
+};
