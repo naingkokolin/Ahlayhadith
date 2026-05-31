@@ -1,6 +1,7 @@
 import mongoose, { Document } from "mongoose";
 
-export interface IHadith extends Document {
+export interface IHadith {
+  // remove extends Document
   book: mongoose.Types.ObjectId;
   chapter: mongoose.Types.ObjectId;
   hadith_number: number;
@@ -39,7 +40,7 @@ const hadithSchema = new mongoose.Schema<IHadith>(
       default: "Sahih",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Full-text search on myanmar translation
