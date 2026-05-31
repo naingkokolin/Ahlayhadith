@@ -23,7 +23,7 @@ export const getAllHadithChapters = async (req: Request, res: Response) => {
 export const getChaptersByBookId = async (req: Request, res: Response) => {
   const { bookId } = req.params;
   try {
-    const chapters = await HadithChapter.find({ book: bookId }).sort({
+    const chapters = await HadithChapter.find({ book: bookId as string }).sort({
       chapter_number: 1,
     });
     if (chapters.length === 0)
@@ -82,11 +82,9 @@ export const getHadithChapterById = async (req: Request, res: Response) => {
 export const updateHadithChapterById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const updatedChapter = await HadithChapter.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
+    const updatedChapter = await HadithChapter.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!updatedChapter)
       return res
         .status(404)

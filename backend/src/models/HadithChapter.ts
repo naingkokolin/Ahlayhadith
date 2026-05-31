@@ -1,6 +1,6 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
-export interface IHadithChapter extends Document {
+export interface IHadithChapter {
   book: mongoose.Types.ObjectId;
   chapter_number: number;
   name_ar: string;
@@ -38,7 +38,7 @@ const hadithChapterSchema = new mongoose.Schema<IHadithChapter>(
       default: 0,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Each chapter_number is unique within a book
@@ -46,6 +46,6 @@ hadithChapterSchema.index({ book: 1, chapter_number: 1 }, { unique: true });
 
 const HadithChapter = mongoose.model<IHadithChapter>(
   "HadithChapter",
-  hadithChapterSchema
+  hadithChapterSchema,
 );
 export default HadithChapter;
