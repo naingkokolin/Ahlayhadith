@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { ISurah, IAyah, Page, getSurahId } from "./types";
+import {
+  ISurah,
+  IAyah,
+  IHadithBook,
+  IHadithChapter,
+  IHadith,
+  Page,
+  getSurahId,
+  getRefId,
+} from "./types";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import SurahsPage from "./pages/SurahsPage";
 import AyahsPage from "./pages/AyahsPage";
+import HadithBooksPage from "./pages/HadithBooksPage";
+import HadithChaptersPage from "./pages/HadithChaptersPage";
+import HadithsPage from "./pages/HadithsPage";
 import Sidebar from "./components/Sidebar";
 import {
   getSurahs,
@@ -14,6 +26,18 @@ import {
   createAyah,
   updateAyah as apiUpdateAyah,
   deleteAyah as apiDeleteAyah,
+  getHadithBooks,
+  createHadithBook,
+  updateHadithBook as apiUpdateBook,
+  deleteHadithBook as apiDeleteBook,
+  getHadithChapters,
+  createHadithChapter,
+  updateHadithChapter as apiUpdateChapter,
+  deleteHadithChapter as apiDeleteChapter,
+  getHadiths,
+  createHadith,
+  updateHadith as apiUpdateHadith,
+  deleteHadith as apiDeleteHadith,
 } from "./services/api";
 import "./styles/globals.css";
 
@@ -98,10 +122,17 @@ const errorStyles: Record<string, React.CSSProperties> = {
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>("dashboard");
-  const [surahs, setSurahs] = useState<ISurah[]>([]);
-  const [ayahs, setAyahs] = useState<IAyah[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // ── Quran state ────────────────────────────────────────────
+  const [surahs, setSurahs] = useState<ISurah[]>([]);
+  const [ayahs, setAyahs] = useState<IAyah[]>([]);
+
+  // ── Hadith state ───────────────────────────────────────────
+  const [hadithBooks, setHadithBooks] = useState<IHadithBook[]>([]);
+  const [hadithChapters, setHadithChapters] = useState<IHadithChapter[]>([]);
+  const [hadiths, setHadiths] = useState<IHadith[]>([]);
 
   // ── Fetch everything on login ──────────────────────────────
   useEffect(() => {
@@ -112,27 +143,64 @@ const App: React.FC = () => {
     const fetchAll = async () => {
       setLoading(true);
       setError(null);
+      const errors: string[] = [];
+
+      // Quran — critical, show error if these fail
       try {
         const [surahRes, ayahRes] = await Promise.all([
           getSurahs(),
           getAyahs(),
         ]);
-        if (cancelled) return;
-        setSurahs(
-          [...surahRes.data.surahs].sort(
-            (a, b) => a.surah_number - b.surah_number,
-          ),
-        );
-        setAyahs(
-          [...ayahRes.data.ayahs].sort((a, b) => a.ayah_number - b.ayah_number),
-        );
-      } catch {
-        if (!cancelled)
-          setError(
-            "Cannot reach the server at http://localhost:8000/api — is your backend running?",
+        if (!cancelled) {
+          setSurahs(
+            [...surahRes.data.surahs].sort(
+              (a, b) => a.surah_number - b.surah_number,
+            ),
           );
-      } finally {
-        if (!cancelled) setLoading(false);
+          setAyahs(
+            [...ayahRes.data.ayahs].sort(
+              (a, b) => a.ayah_number - b.ayah_number,
+            ),
+          );
+        }
+      } catch {
+        errors.push("Quran data (surahs/ayahs)");
+      }
+
+      // Hadith — independent, Quran still shows if these fail
+      try {
+        const [bookRes, chapterRes, hadithRes] = await Promise.all([
+          getHadithBooks(),
+          getHadithChapters(),
+          getHadiths(),
+        ]);
+        if (!cancelled) {
+          setHadithBooks(
+            [...bookRes.data.books].sort(
+              (a, b) => a.book_number - b.book_number,
+            ),
+          );
+          setHadithChapters(
+            [...chapterRes.data.chapters].sort(
+              (a, b) => a.chapter_number - b.chapter_number,
+            ),
+          );
+          setHadiths(
+            [...hadithRes.data.hadiths].sort(
+              (a, b) => a.hadith_number - b.hadith_number,
+            ),
+          );
+        }
+      } catch {
+        errors.push("Hadith data (books/chapters/hadiths)");
+      }
+
+      if (!cancelled) {
+        if (errors.length > 0)
+          setError(
+            `Failed to load: ${errors.join(" and ")}. Check your backend routes.`,
+          );
+        setLoading(false);
       }
     };
 
@@ -155,7 +223,6 @@ const App: React.FC = () => {
       setError("Failed to create surah.");
     }
   };
-
   const updateSurah = async (id: string, data: Omit<ISurah, "_id">) => {
     try {
       const res = await apiUpdateSurah(id, data);
@@ -168,7 +235,6 @@ const App: React.FC = () => {
       setError("Failed to update surah.");
     }
   };
-
   const deleteSurah = async (id: string) => {
     try {
       await apiDeleteSurah(id);
@@ -190,7 +256,6 @@ const App: React.FC = () => {
       setError("Failed to create ayah.");
     }
   };
-
   const updateAyah = async (id: string, data: Omit<IAyah, "_id">) => {
     try {
       const res = await apiUpdateAyah(id, data);
@@ -199,7 +264,6 @@ const App: React.FC = () => {
       setError("Failed to update ayah.");
     }
   };
-
   const deleteAyah = async (id: string) => {
     try {
       await apiDeleteAyah(id);
@@ -209,11 +273,119 @@ const App: React.FC = () => {
     }
   };
 
+  // ── HadithBook CRUD ────────────────────────────────────────
+  const addHadithBook = async (data: Omit<IHadithBook, "_id">) => {
+    try {
+      const res = await createHadithBook(data as IHadithBook);
+      setHadithBooks((prev) =>
+        [...prev, res.data.book].sort((a, b) => a.book_number - b.book_number),
+      );
+    } catch {
+      setError("Failed to create hadith book.");
+    }
+  };
+  const updateHadithBook = async (
+    id: string,
+    data: Omit<IHadithBook, "_id">,
+  ) => {
+    try {
+      const res = await apiUpdateBook(id, data);
+      setHadithBooks((prev) =>
+        prev
+          .map((b) => (b._id === id ? res.data.book : b))
+          .sort((a, b) => a.book_number - b.book_number),
+      );
+    } catch {
+      setError("Failed to update hadith book.");
+    }
+  };
+  const deleteHadithBook = async (id: string) => {
+    try {
+      await apiDeleteBook(id);
+      setHadithBooks((prev) => prev.filter((b) => b._id !== id));
+      setHadithChapters((prev) => prev.filter((c) => getRefId(c.book) !== id));
+      setHadiths((prev) => prev.filter((h) => getRefId(h.book) !== id));
+    } catch {
+      setError("Failed to delete hadith book.");
+    }
+  };
+
+  // ── HadithChapter CRUD ─────────────────────────────────────
+  const addHadithChapter = async (data: Omit<IHadithChapter, "_id">) => {
+    try {
+      const res = await createHadithChapter(data as IHadithChapter);
+      setHadithChapters((prev) =>
+        [...prev, res.data.chapter].sort(
+          (a, b) => a.chapter_number - b.chapter_number,
+        ),
+      );
+    } catch {
+      setError("Failed to create hadith chapter.");
+    }
+  };
+  const updateHadithChapter = async (
+    id: string,
+    data: Omit<IHadithChapter, "_id">,
+  ) => {
+    try {
+      const res = await apiUpdateChapter(id, data);
+      setHadithChapters((prev) =>
+        prev.map((c) => (c._id === id ? res.data.chapter : c)),
+      );
+    } catch {
+      setError("Failed to update hadith chapter.");
+    }
+  };
+  const deleteHadithChapter = async (id: string) => {
+    try {
+      await apiDeleteChapter(id);
+      setHadithChapters((prev) => prev.filter((c) => c._id !== id));
+      setHadiths((prev) => prev.filter((h) => getRefId(h.chapter) !== id));
+    } catch {
+      setError("Failed to delete hadith chapter.");
+    }
+  };
+
+  // ── Hadith CRUD ────────────────────────────────────────────
+  const addHadith = async (data: Omit<IHadith, "_id">) => {
+    try {
+      const res = await createHadith(data as IHadith);
+      setHadiths((prev) =>
+        [...prev, res.data.hadith].sort(
+          (a, b) => a.hadith_number - b.hadith_number,
+        ),
+      );
+    } catch {
+      setError("Failed to create hadith.");
+    }
+  };
+  const updateHadith = async (id: string, data: Omit<IHadith, "_id">) => {
+    try {
+      const res = await apiUpdateHadith(id, data);
+      setHadiths((prev) =>
+        prev.map((h) => (h._id === id ? res.data.hadith : h)),
+      );
+    } catch {
+      setError("Failed to update hadith.");
+    }
+  };
+  const deleteHadith = async (id: string) => {
+    try {
+      await apiDeleteHadith(id);
+      setHadiths((prev) => prev.filter((h) => h._id !== id));
+    } catch {
+      setError("Failed to delete hadith.");
+    }
+  };
+
   // ── Logout ─────────────────────────────────────────────────
   const handleLogout = () => {
     setLoggedIn(false);
     setSurahs([]);
     setAyahs([]);
+    setHadithBooks([]);
+    setHadithChapters([]);
+    setHadiths([]);
     setCurrentPage("dashboard");
   };
 
@@ -239,6 +411,7 @@ const App: React.FC = () => {
         {currentPage === "dashboard" && (
           <DashboardPage surahs={surahs} ayahs={ayahs} />
         )}
+
         {currentPage === "surahs" && (
           <SurahsPage
             surahs={surahs}
@@ -247,6 +420,7 @@ const App: React.FC = () => {
             onDelete={deleteSurah}
           />
         )}
+
         {currentPage === "ayahs" && (
           <AyahsPage
             surahs={surahs}
@@ -254,6 +428,36 @@ const App: React.FC = () => {
             onAdd={addAyah}
             onUpdate={updateAyah}
             onDelete={deleteAyah}
+          />
+        )}
+
+        {currentPage === "hadith-books" && (
+          <HadithBooksPage
+            books={hadithBooks}
+            onAdd={addHadithBook}
+            onUpdate={updateHadithBook}
+            onDelete={deleteHadithBook}
+          />
+        )}
+
+        {currentPage === "hadith-chapters" && (
+          <HadithChaptersPage
+            books={hadithBooks}
+            chapters={hadithChapters}
+            onAdd={addHadithChapter}
+            onUpdate={updateHadithChapter}
+            onDelete={deleteHadithChapter}
+          />
+        )}
+
+        {currentPage === "hadiths" && (
+          <HadithsPage
+            books={hadithBooks}
+            chapters={hadithChapters}
+            hadiths={hadiths}
+            onAdd={addHadith}
+            onUpdate={updateHadith}
+            onDelete={deleteHadith}
           />
         )}
       </main>
