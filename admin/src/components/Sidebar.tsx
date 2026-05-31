@@ -7,58 +7,121 @@ interface Props {
   onLogout: () => void;
 }
 
-const NAV_ITEMS: { id: Page; label: string; icon: React.ReactNode }[] = [
+const NAV_GROUPS: {
+  label: string;
+  items: { id: Page; label: string; icon: React.ReactNode }[];
+}[] = [
   {
-    id: "dashboard",
-    label: "Dashboard",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      >
-        <rect x="1" y="1" width="6" height="6" rx="1.5" />
-        <rect x="9" y="1" width="6" height="6" rx="1.5" />
-        <rect x="1" y="9" width="6" height="6" rx="1.5" />
-        <rect x="9" y="9" width="6" height="6" rx="1.5" />
-      </svg>
-    ),
+    label: "Quran",
+    items: [
+      {
+        id: "dashboard",
+        label: "Dashboard",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <rect x="1" y="1" width="6" height="6" rx="1.5" />
+            <rect x="9" y="1" width="6" height="6" rx="1.5" />
+            <rect x="1" y="9" width="6" height="6" rx="1.5" />
+            <rect x="9" y="9" width="6" height="6" rx="1.5" />
+          </svg>
+        ),
+      },
+      {
+        id: "surahs",
+        label: "Surahs",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <path d="M3 3h10M3 6h10M3 9h6M3 12h8" />
+          </svg>
+        ),
+      },
+      {
+        id: "ayahs",
+        label: "Ayahs",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V4z" />
+            <path d="M5 7h6M5 10h4" />
+          </svg>
+        ),
+      },
+    ],
   },
   {
-    id: "surahs",
-    label: "Surahs",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      >
-        <path d="M3 3h10M3 6h10M3 9h6M3 12h8" />
-      </svg>
-    ),
-  },
-  {
-    id: "ayahs",
-    label: "Ayahs",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      >
-        <path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V4z" />
-        <path d="M5 7h6M5 10h4" />
-      </svg>
-    ),
+    label: "Hadith",
+    items: [
+      {
+        id: "hadith-books",
+        label: "Books",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <path d="M3 2h8a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
+            <path d="M5 5h6M5 8h6M5 11h4" />
+          </svg>
+        ),
+      },
+      {
+        id: "hadith-chapters",
+        label: "Chapters",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <path d="M2 3h12M2 6h8M2 9h10M2 12h6" />
+          </svg>
+        ),
+      },
+      {
+        id: "hadiths",
+        label: "Hadiths",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <circle cx="8" cy="8" r="6" />
+            <path d="M8 5v3l2 2" />
+          </svg>
+        ),
+      },
+    ],
   },
 ];
 
@@ -70,22 +133,29 @@ const Sidebar: React.FC<Props> = ({ currentPage, onNavigate, onLogout }) => {
         <span style={styles.logoSub}>Admin Panel</span>
       </div>
 
-      <div style={styles.sectionLabel}>Content</div>
-
-      {NAV_ITEMS.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            ...styles.navItem,
-            ...(currentPage === item.id ? styles.navItemActive : {}),
-          }}
-          onClick={() => onNavigate(item.id)}
-        >
-          {currentPage === item.id && <div style={styles.activeBar} />}
-          <span style={{ color: "inherit", display: "flex" }}>{item.icon}</span>
-          {item.label}
-        </div>
-      ))}
+      <div style={styles.navScroll}>
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label}>
+            <div style={styles.sectionLabel}>{group.label}</div>
+            {group.items.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  ...styles.navItem,
+                  ...(currentPage === item.id ? styles.navItemActive : {}),
+                }}
+                onClick={() => onNavigate(item.id)}
+              >
+                {currentPage === item.id && <div style={styles.activeBar} />}
+                <span style={{ color: "inherit", display: "flex" }}>
+                  {item.icon}
+                </span>
+                {item.label}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
 
       <div style={styles.footer}>
         <div style={styles.avatar}>A</div>
@@ -141,8 +211,9 @@ const styles: Record<string, React.CSSProperties> = {
     color: "var(--text3)",
     marginTop: 2,
   },
+  navScroll: { flex: 1, overflowY: "auto" },
   sectionLabel: {
-    padding: "18px 20px 6px",
+    padding: "16px 20px 5px",
     fontSize: 10,
     letterSpacing: 2,
     textTransform: "uppercase",
@@ -161,10 +232,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: "relative",
     userSelect: "none",
   },
-  navItemActive: {
-    color: "var(--gold)",
-    background: "var(--gold-dim)",
-  },
+  navItemActive: { color: "var(--gold)", background: "var(--gold-dim)" },
   activeBar: {
     position: "absolute",
     left: 0,
