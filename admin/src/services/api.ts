@@ -1,7 +1,14 @@
 import axios, { AxiosResponse } from "axios";
-import { ISurah, IAyah, IHadithBook, IHadithChapter, IHadith } from "../types";
+import {
+  ISurah,
+  IAyah,
+  IHadithBook,
+  IHadithChapter,
+  IHadith,
+  IHadithBible,
+} from "../types";
 
-const API_URL = "https://ahlayhadith.onrender.com/api";
+const API_URL = "https://ahlayhadith.onrender.com/api"; // "http://localhost:3000/api";
 
 const api = axios.create({ baseURL: API_URL });
 
@@ -31,19 +38,41 @@ export const updateAyah = (
 export const deleteAyah = (id: string): Promise<AxiosResponse> =>
   api.delete(`/ayahs/${id}`);
 
+// ─── Hadith Bibles ─────────────────────────────────────────────
+export const getHadithBibles = (): Promise<
+  AxiosResponse<{ bibles: IHadithBible[] }>
+> => api.get("/hadith-bibles");
+
+export const createHadithBible = (
+  data: IHadithBible,
+): Promise<AxiosResponse<{ bible: IHadithBible }>> =>
+  api.post("hadith-bibles", data);
+
+export const updateHadithBible = (
+  id: string,
+  data: Partial<IHadithBible>,
+): Promise<AxiosResponse<{ bible: IHadithBible }>> =>
+  api.put(`/hadith-bibles/${id}`, data);
+
+export const deleteHadithBible = (id: string): Promise<AxiosResponse> =>
+  api.delete(`/hadith-bibles/${id}`);
+
 // ─── Hadith Books ─────────────────────────────────────────────
 export const getHadithBooks = (): Promise<
   AxiosResponse<{ books: IHadithBook[] }>
 > => api.get("/hadith-books");
+
 export const createHadithBook = (
   data: IHadithBook,
 ): Promise<AxiosResponse<{ book: IHadithBook }>> =>
   api.post("/hadith-books", data);
+
 export const updateHadithBook = (
   id: string,
   data: Partial<IHadithBook>,
 ): Promise<AxiosResponse<{ book: IHadithBook }>> =>
   api.put(`/hadith-books/${id}`, data);
+
 export const deleteHadithBook = (id: string): Promise<AxiosResponse> =>
   api.delete(`/hadith-books/${id}`);
 

@@ -1,21 +1,24 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
-export interface IHadithBook extends Document {
+export interface IHadithBook {
+  bible: mongoose.Types.ObjectId;
   book_number: number;
   name_ar: string;
   name_mm: string;
   name_en: string;
-  author: string;
-  totalHadith: number;
+  // totalHadith: number;
 }
 
 const hadithBookSchema = new mongoose.Schema<IHadithBook>(
   {
+    bible: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "HadithBible",
+      required: true,
+    },
     book_number: {
       type: Number,
       required: true,
-      unique: true,
-      index: true,
     },
     name_ar: {
       type: String,
@@ -29,18 +32,18 @@ const hadithBookSchema = new mongoose.Schema<IHadithBook>(
       type: String,
       required: true,
     },
-    author: {
-      type: String,
-      required: true, // e.g. "Imam Bukhari"
-    },
-    totalHadith: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    // totalHadith: {
+    //   type: Number,
+    //   required: true,
+    //   default: 0,
+    // },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+// Each chapter_number is unique within a book
+hadithBookSchema.index({ bible: 1, book_number: 1 }, { unique: true });
+
 const HadithBook = mongoose.model<IHadithBook>("HadithBook", hadithBookSchema);
+
 export default HadithBook;

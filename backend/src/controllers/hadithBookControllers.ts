@@ -20,15 +20,15 @@ export const getAllHadithBooks = async (req: Request, res: Response) => {
 
 export const addHadithBook = async (req: Request, res: Response) => {
   try {
-    const { book_number, name_ar, name_mm, name_en, author, totalHadith } =
-      req.body;
+    const { bible, book_number, name_ar, name_mm, name_en } = req.body;
     const newBook = await HadithBook.create({
+      bible,
       book_number,
       name_ar,
       name_mm,
       name_en,
-      author,
-      totalHadith,
+      // author,
+      // totalHadith,
     });
     res.status(201).json({ book: newBook });
   } catch (error) {

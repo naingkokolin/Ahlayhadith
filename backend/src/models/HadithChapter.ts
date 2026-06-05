@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IHadithChapter {
+  // bible: mongoose.Types.ObjectId;
   book: mongoose.Types.ObjectId;
   chapter_number: number;
   name_ar: string;
@@ -11,6 +12,11 @@ export interface IHadithChapter {
 
 const hadithChapterSchema = new mongoose.Schema<IHadithChapter>(
   {
+    // bible: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "HadithBible",
+    //   required: true,
+    // },
     book: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "HadithBook",
@@ -42,7 +48,10 @@ const hadithChapterSchema = new mongoose.Schema<IHadithChapter>(
 );
 
 // Each chapter_number is unique within a book
-hadithChapterSchema.index({ book: 1, chapter_number: 1 }, { unique: true });
+hadithChapterSchema.index(
+  { bible: 1, book: 1, chapter_number: 1 },
+  { unique: true },
+);
 
 const HadithChapter = mongoose.model<IHadithChapter>(
   "HadithChapter",
