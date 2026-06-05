@@ -29,14 +29,25 @@ export const getSurahId = (surah: IAyah["surah"]): string =>
 
 // ─── Hadith ───────────────────────────────────────────────────
 
+export interface IHadithBible {
+  _id?: string;
+  bible_number: number;
+  name_ar: string;
+  name_mm: string;
+  name_en: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface IHadithBook {
   _id?: string;
+  bible: string | IHadithBible;
   book_number: number;
   name_ar: string;
   name_mm: string;
   name_en: string;
-  author: string;
-  totalHadith: number;
+  // author: string;
+  // totalHadith: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -44,6 +55,7 @@ export interface IHadithBook {
 export interface IHadithChapter {
   _id?: string;
   // populated by Mongoose → can be full IHadithBook object or string id
+  // bible: string | IHadithBible;
   book: string | IHadithBook;
   chapter_number: number;
   name_ar: string;
@@ -57,6 +69,7 @@ export interface IHadithChapter {
 export interface IHadith {
   _id?: string;
   // both populated by Mongoose
+  // bible: string | IHadithBible;
   book: string | IHadithBook;
   chapter: string | IHadithChapter;
   hadith_number: number;
@@ -77,6 +90,7 @@ export type Page =
   | "dashboard"
   | "surahs"
   | "ayahs"
+  | "hadith-bibles"
   | "hadith-books"
   | "hadith-chapters"
   | "hadiths";

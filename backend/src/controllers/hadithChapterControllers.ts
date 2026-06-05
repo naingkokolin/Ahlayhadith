@@ -42,9 +42,17 @@ export const getChaptersByBookId = async (req: Request, res: Response) => {
 
 export const addHadithChapter = async (req: Request, res: Response) => {
   try {
-    const { book, chapter_number, name_ar, name_mm, name_en, totalHadith } =
-      req.body;
+    const {
+      // bible,
+      book,
+      chapter_number,
+      name_ar,
+      name_mm,
+      name_en,
+      totalHadith,
+    } = req.body;
     const newChapter = await HadithChapter.create({
+      // bible,
       book,
       chapter_number,
       name_ar,

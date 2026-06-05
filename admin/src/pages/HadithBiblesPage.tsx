@@ -1,20 +1,20 @@
 import React, { useState, useMemo } from "react";
-import { IHadithBook } from "../types";
+import { IHadithBible } from "../types";
 import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
 
 interface Props {
-  books: IHadithBook[];
-  onAdd: (book: Omit<IHadithBook, "_id">) => void;
-  onUpdate: (id: string, book: Omit<IHadithBook, "_id">) => void;
+  bibles: IHadithBible[];
+  // books: IHadithBook[];
+  onAdd: (bible: Omit<IHadithBible, "_id">) => void;
+  onUpdate: (id: string, bible: Omit<IHadithBible, "_id">) => void;
   onDelete: (id: string) => void;
 }
 
 const PER_PAGE = 8;
 
-const EMPTY = (): Omit<IHadithBook, "_id"> => ({
-  bible: "",
-  book_number: 0,
+const EMPTY = (): Omit<IHadithBible, "_id"> => ({
+  bible_number: 0,
   name_ar: "",
   name_mm: "",
   name_en: "",
@@ -22,34 +22,36 @@ const EMPTY = (): Omit<IHadithBook, "_id"> => ({
   // totalHadith: 0,
 });
 
-const HadithBooksPage: React.FC<Props> = ({
-  books,
+const HadithBiblesPage: React.FC<Props> = ({
+  bibles,
+  // books,
   onAdd,
   onUpdate,
   onDelete,
 }) => {
+  // const [selectedBibleId, setSelectedBibleId] = useState(bibles[0]?._id ?? "");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [delTarget, setDelTarget] = useState<IHadithBook | null>(null);
-  const [form, setForm] = useState<Omit<IHadithBook, "_id">>(EMPTY());
+  const [delTarget, setDelTarget] = useState<IHadithBible | null>(null);
+  const [form, setForm] = useState<Omit<IHadithBible, "_id">>(EMPTY());
   const [formError, setFormError] = useState("");
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return q
-      ? books.filter(
+      ? bibles.filter(
           (b) =>
             b.name_en.toLowerCase().includes(q) ||
             b.name_ar.includes(q) ||
             b.name_mm.includes(q) ||
             // b.author.toLowerCase().includes(q) ||
-            String(b.book_number).includes(q),
+            String(b.bible_number).includes(q),
         )
-      : books;
-  }, [books, search]);
+      : bibles;
+  }, [bibles, search]);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
   const safePage = Math.min(page, totalPages);
@@ -61,29 +63,21 @@ const HadithBooksPage: React.FC<Props> = ({
     setFormError("");
     setModalOpen(true);
   };
-  const openEdit = (b: IHadithBook) => {
+  const openEdit = (b: IHadithBible) => {
     setEditingId(b._id ?? null);
     setForm({
-      bible: b.bible,
-      book_number: b.book_number,
+      // bible: getRefId(b.bible),
+      bible_number: b.bible_number,
       name_ar: b.name_ar,
       name_mm: b.name_mm,
       name_en: b.name_en,
-      // author: b.author,
-      // totalHadith: b.totalHadith,
     });
     setFormError("");
     setModalOpen(true);
   };
 
   const handleSave = () => {
-    if (
-      !form.book_number ||
-      !form.name_ar ||
-      !form.name_en ||
-      !form.name_mm
-      // !form.author
-    ) {
+    if (!form.bible_number || !form.name_ar || !form.name_en || !form.name_mm) {
       setFormError("All fields except Total Hadith are required.");
       return;
     }
@@ -98,11 +92,11 @@ const HadithBooksPage: React.FC<Props> = ({
     <div>
       <div style={styles.topbar}>
         <div>
-          <div style={styles.title}>Hadith Books</div>
-          <div style={styles.sub}>Manage hadith book collections</div>
+          <div style={styles.title}>Hadith Bibles</div>
+          <div style={styles.sub}>Manage hadith bible collections</div>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>
-          + Add Book
+          + Add Bible
         </button>
       </div>
 
@@ -110,14 +104,14 @@ const HadithBooksPage: React.FC<Props> = ({
         <div className="table-card">
           <div className="table-header">
             <div className="table-title">
-              All Books{" "}
+              All Bibles{" "}
               <span className="badge badge-gold" style={{ marginLeft: 8 }}>
-                {books.length}
+                {bibles.length}
               </span>
             </div>
             <input
               className="search-input"
-              placeholder="Search book..."
+              placeholder="Search bible..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -132,8 +126,8 @@ const HadithBooksPage: React.FC<Props> = ({
                 <th>Arabic</th>
                 <th>English</th>
                 <th>Myanmar</th>
-                {/* <th>Author</th>
-                <th>Hadiths</th> */}
+                {/* <th>Author</th> */}
+                {/* <th>Hadiths</th> */}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -141,24 +135,20 @@ const HadithBooksPage: React.FC<Props> = ({
               {slice.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={styles.empty}>
-                    No books found
+                    No bibles found
                   </td>
                 </tr>
               ) : (
                 slice.map((b) => (
                   <tr key={b._id}>
                     <td>
-                      <span className="badge badge-gold">{b.book_number}</span>
+                      <span className="badge badge-gold">{b.bible_number}</span>
                     </td>
                     <td className="td-ar">{b.name_ar}</td>
                     <td className="td-main">{b.name_en}</td>
                     <td>{b.name_mm}</td>
-                    {/* <td style={{ color: "var(--text)", fontSize: 12 }}>
-                      {b.author}
-                    </td>
-                    <td>
-                      <span className="badge badge-blue">{b.totalHadith}</span>
-                    </td> */}
+                    {/* <td style={{ color: "var(--text)", fontSize: 12 }}>{b.author}</td>
+                  <td><span className="badge badge-blue">{b.totalHadith}</span></td> */}
                     <td>
                       <div className="action-cell">
                         <button
@@ -197,41 +187,35 @@ const HadithBooksPage: React.FC<Props> = ({
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingId ? "Edit Hadith Book" : "Add Hadith Book"}
-        subtitle="Fill in the book details below."
+        title={editingId ? "Edit Hadith Bible" : "Add Hadith Bible"}
+        subtitle="Fill in the bible details below."
         footer={
           <>
             <button className="btn" onClick={() => setModalOpen(false)}>
               Cancel
             </button>
             <button className="btn btn-primary" onClick={handleSave}>
-              Save Book
+              Save Bible
             </button>
           </>
         }
       >
         <div style={styles.formGrid}>
           <div className="field-wrap">
-            <label className="field-label">Book Number</label>
+            <label className="field-label">Bible Number</label>
             <input
               className="field-input"
               type="number"
               min={1}
-              value={form.book_number || ""}
-              onChange={(e) => set("book_number", parseInt(e.target.value))}
+              value={form.bible_number || ""}
+              onChange={(e) => set("bible_number", parseInt(e.target.value))}
               placeholder="e.g. 1"
             />
           </div>
           {/* <div className="field-wrap">
             <label className="field-label">Total Hadith</label>
-            <input
-              className="field-input"
-              type="number"
-              min={0}
-              value={form.totalHadith || ""}
-              onChange={(e) => set("totalHadith", parseInt(e.target.value))}
-              placeholder="e.g. 7563"
-            />
+            <input className="field-input" type="number" min={0} value={form.totalHadith || ""}
+              onChange={(e) => set("totalHadith", parseInt(e.target.value))} placeholder="e.g. 7563" />
           </div> */}
           <div className="field-wrap" style={{ gridColumn: "span 2" }}>
             <label className="field-label">Arabic Name</label>
@@ -266,13 +250,8 @@ const HadithBooksPage: React.FC<Props> = ({
           </div>
           {/* <div className="field-wrap" style={{ gridColumn: "span 2" }}>
             <label className="field-label">Author</label>
-            <input
-              className="field-input"
-              type="text"
-              value={form.author}
-              onChange={(e) => set("author", e.target.value)}
-              placeholder="e.g. Imam Bukhari"
-            />
+            <input className="field-input" type="text" value={form.author}
+              onChange={(e) => set("author", e.target.value)} placeholder="e.g. Imam Bukhari" />
           </div> */}
         </div>
         {formError && <div style={styles.formError}>{formError}</div>}
@@ -282,7 +261,7 @@ const HadithBooksPage: React.FC<Props> = ({
       <Modal
         open={delOpen}
         onClose={() => setDelOpen(false)}
-        title="Delete Book"
+        title="Delete Bible"
         danger
         width={360}
         footer={
@@ -310,7 +289,7 @@ const HadithBooksPage: React.FC<Props> = ({
               {delTarget?.name_en}
             </strong>
             ?<br />
-            All associated chapters and hadiths may be affected.
+            All associated books, chapters and hadiths may be affected.
           </div>
         </div>
       </Modal>
@@ -338,4 +317,4 @@ const styles: Record<string, React.CSSProperties> = {
   empty: { textAlign: "center", color: "var(--text3)", padding: 32 },
 };
 
-export default HadithBooksPage;
+export default HadithBiblesPage;

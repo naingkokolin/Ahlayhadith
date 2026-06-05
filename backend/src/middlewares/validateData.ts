@@ -48,26 +48,25 @@ export const validateHadithBook = (
   res: Response,
   next: NextFunction,
 ) => {
-  const { book_number, name_ar, name_mm, name_en, author, totalHadith } =
-    req.body;
+  const { book_number, name_ar, name_mm, name_en } = req.body;
   if (
     !book_number ||
     !name_ar ||
     !name_mm ||
-    !name_en ||
-    !author ||
-    !totalHadith
+    !name_en
+    // !author ||
+    // !totalHadith
   ) {
     return res.status(400).json({ message: "All fields are required!" });
   }
   if (
     typeof book_number !== "number" ||
-    typeof totalHadith !== "number" ||
-    book_number <= 0 ||
-    totalHadith <= 0
+    // typeof totalHadith !== "number" ||
+    book_number <= 0
+    // totalHadith <= 0
   ) {
     return res.status(400).json({
-      message: "book_number and totalHadith must be positive integers",
+      message: "book_number must be positive integer",
     });
   }
   next();

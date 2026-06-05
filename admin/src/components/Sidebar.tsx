@@ -72,6 +72,23 @@ const NAV_GROUPS: {
     label: "Hadith",
     items: [
       {
+        id: "hadith-bibles",
+        label: "Bibles",
+        icon: (
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          >
+            <path d="M4 2h7a2 2 0 012 2v10H4a2 2 0 00-2 2V4a2 2 0 012-2z" />
+            <path d="M6 5h4M8 4v6" />
+          </svg>
+        ),
+      },
+      {
         id: "hadith-books",
         label: "Books",
         icon: (
