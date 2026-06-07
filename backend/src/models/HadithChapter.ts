@@ -36,7 +36,8 @@ const hadithChapterSchema = new mongoose.Schema<IHadithChapter>(
     },
     name_en: {
       type: String,
-      required: true,
+      required: false, // may be blank
+      default: null,
     },
     totalHadith: {
       type: Number,
