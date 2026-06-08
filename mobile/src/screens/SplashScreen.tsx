@@ -70,7 +70,7 @@ export default function SplashScreen({ navigation }: Props) {
       </Animated.View>
 
       <Animated.View style={[styles.textWrapper, { opacity: textOpacity }]}>
-        <Text style={styles.title}>ကုရ်အာန် နှင့် ဟဒီး</Text>
+        <Text style={styles.title}>ကုရ်အာန် နှင့် ဟဒီးဆ် (မြန်မာ)</Text>
         <Text style={styles.subtitle}>Quran & Hadith — Myanmar</Text>
       </Animated.View>
 

@@ -55,9 +55,9 @@ export default function HadithBooksScreen({ navigation }: Props) {
         <View style={styles.info}>
           <Text style={styles.nameAr}>{item.name_ar}</Text>
           <Text style={styles.nameMm}>{item.name_mm}</Text>
-          <Text style={styles.meta}>
+          {/* <Text style={styles.meta}>
             {item.author} · {item.totalHadith} ဟဒီး
-          </Text>
+          </Text> */}
         </View>
         <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
       </TouchableOpacity>

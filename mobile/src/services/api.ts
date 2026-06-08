@@ -5,13 +5,14 @@ import {
   HadithChapter,
   Hadith,
   SearchResult,
+  HadithBible,
   ApiResponse,
   PaginatedResponse,
 } from "../types";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 // Change this to your backend URL
-const BASE_URL = "http://192.168.100.19:3000/api"; // "http://localhost:3000/api";
+const BASE_URL = "https://ahlayhadith.onrender.com/api"; //"http://192.168.100.66:3000/api"; // "http://localhost:3000/api";
 
 const request = async <T>(path: string): Promise<T> => {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -43,6 +44,9 @@ export const QuranApi = {
 // ─── Hadith ───────────────────────────────────────────────────────────────────
 
 export const HadithApi = {
+  getBibles: () =>
+    request<{ bibles: HadithBible[] }>("/hadith-bibles").then((r) => r.bibles),
+
   getBooks: () =>
     request<{ books: HadithBook[] }>("/hadith-books").then((r) => r.books),
 
@@ -50,12 +54,12 @@ export const HadithApi = {
     request<{ book: HadithBook }>(`/hadith-books/${id}`).then((r) => r.book),
 
   getChapters: (bookId: string) =>
-    request<{ chapters: HadithChapter[] }>(
-      `/hadith-chapters/book/${bookId}`,
-    ).then((r) => r.chapters),
+    request<{ chapters: HadithChapter[] }>(`/hadith-chapters/${bookId}`).then(
+      (r) => r.chapters,
+    ),
 
   getHadiths: (chapterId: string) =>
-    request<{ hadiths: Hadith[] }>(`/hadiths/chapter/${chapterId}`).then(
+    request<{ hadiths: Hadith[] }>(`/hadiths/${chapterId}`).then(
       (r) => r.hadiths,
     ),
 

@@ -64,7 +64,7 @@ export default function HadithChaptersScreen({ route, navigation }: Props) {
       <View style={styles.info}>
         <Text style={styles.nameMm}>{item.name_mm}</Text>
         <Text style={styles.nameEn}>
-          {item.name_en} · {item.totalHadith} ဟဒီး
+          {item.name_en} · {item.totalHadith} ဟဒီးဆ်
         </Text>
       </View>
       <Text style={styles.nameAr}>{item.name_ar}</Text>
@@ -90,7 +90,12 @@ export default function HadithChaptersScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.searchWrapper}>
-        <Ionicons name="search" size={18} color={COLORS.textMuted} style={styles.searchIcon} />
+        <Ionicons
+          name="search"
+          size={18}
+          color={COLORS.textMuted}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="အခန်းရှာဖွေပါ..."
@@ -110,9 +115,7 @@ export default function HadithChaptersScreen({ route, navigation }: Props) {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
         ItemSeparatorComponent={() => <View style={{ height: SPACING.sm }} />}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>ရလဒ်မတွေ့ပါ</Text>
-        }
+        ListEmptyComponent={<Text style={styles.emptyText}>ရလဒ်မတွေ့ပါ</Text>}
       />
     </SafeAreaView>
   );
@@ -133,7 +136,12 @@ const styles = StyleSheet.create({
     ...SHADOW.card,
   },
   searchIcon: { marginRight: SPACING.sm },
-  searchInput: { flex: 1, fontFamily: FONTS.regular, fontSize: 14, color: COLORS.text },
+  searchInput: {
+    flex: 1,
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    color: COLORS.text,
+  },
   list: { paddingHorizontal: SPACING.md, paddingBottom: SPACING.xl },
   card: {
     flexDirection: "row",
@@ -155,8 +163,23 @@ const styles = StyleSheet.create({
   badgeText: { fontFamily: FONTS.bold, fontSize: 13, color: COLORS.secondary },
   info: { flex: 1 },
   nameMm: { fontFamily: FONTS.bold, fontSize: 15, color: COLORS.text },
-  nameEn: { fontFamily: FONTS.regular, fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
-  nameAr: { fontFamily: FONTS.arabic, fontSize: 18, color: COLORS.secondary, marginLeft: SPACING.sm },
-  emptyText: { textAlign: "center", fontFamily: FONTS.regular, color: COLORS.textMuted, marginTop: SPACING.xl },
+  nameEn: {
+    fontFamily: FONTS.regular,
+    fontSize: 12,
+    color: COLORS.textMuted,
+    marginTop: 2,
+  },
+  nameAr: {
+    fontFamily: FONTS.arabic,
+    fontSize: 18,
+    color: COLORS.secondary,
+    marginLeft: SPACING.sm,
+  },
+  emptyText: {
+    textAlign: "center",
+    fontFamily: FONTS.regular,
+    color: COLORS.textMuted,
+    marginTop: SPACING.xl,
+  },
   errorText: { fontFamily: FONTS.regular, color: COLORS.error },
 });
