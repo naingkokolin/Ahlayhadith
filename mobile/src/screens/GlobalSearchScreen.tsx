@@ -25,9 +25,9 @@ type Filter = "all" | SearchResultType;
 
 const FILTERS: { label: string; value: Filter }[] = [
   { label: "အားလုံး", value: "all" },
-  { label: "သူရ", value: "surah" },
-  { label: "အာယာ", value: "ayah" },
-  { label: "ဟဒီး", value: "hadith" },
+  { label: "စူရာဟ်", value: "surah" },
+  { label: "အာယာသ်", value: "ayah" },
+  { label: "ဟဒီးဆ်", value: "hadith" },
 ];
 
 const TYPE_ICON: Record<SearchResultType, keyof typeof Ionicons.glyphMap> = {
@@ -46,7 +46,8 @@ export default function GlobalSearchScreen({ navigation }: Props) {
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
 
   const searchFn = (q: string) => {
-    if (activeFilter === "surah" || activeFilter === "ayah") return QuranApi.search(q);
+    if (activeFilter === "surah" || activeFilter === "ayah")
+      return QuranApi.search(q);
     if (activeFilter === "hadith") return HadithApi.search(q);
     return GlobalSearchApi.search(q);
   };
@@ -72,7 +73,11 @@ export default function GlobalSearchScreen({ navigation }: Props) {
     } else if (item.type === "ayah" && item.surahId) {
       navigation.navigate("QuranStack", {
         screen: "AyahList",
-        params: { surahId: item.surahId, surahName: item.title, surahNumber: 0 },
+        params: {
+          surahId: item.surahId,
+          surahName: item.title,
+          surahNumber: 0,
+        },
       });
     } else if (item.type === "hadith" && item.chapterId) {
       navigation.navigate("HadithStack", {
@@ -118,7 +123,10 @@ export default function GlobalSearchScreen({ navigation }: Props) {
       >
         {/* Search bar */}
         <View style={styles.searchRow}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+          >
             <Ionicons name="arrow-back" size={22} color={COLORS.text} />
           </TouchableOpacity>
           <View style={styles.searchWrapper}>
@@ -134,7 +142,11 @@ export default function GlobalSearchScreen({ navigation }: Props) {
             />
             {query.length > 0 && (
               <TouchableOpacity onPress={clear}>
-                <Ionicons name="close-circle" size={18} color={COLORS.textMuted} />
+                <Ionicons
+                  name="close-circle"
+                  size={18}
+                  color={COLORS.textMuted}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -183,7 +195,9 @@ export default function GlobalSearchScreen({ navigation }: Props) {
             keyExtractor={(item) => `${item.type}-${item.id}`}
             renderItem={renderItem}
             contentContainerStyle={styles.list}
-            ItemSeparatorComponent={() => <View style={{ height: SPACING.sm }} />}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: SPACING.sm }} />
+            )}
             ListEmptyComponent={
               <View style={styles.center}>
                 <Text style={styles.emptyText}>ရလဒ်မတွေ့ပါ</Text>
@@ -198,7 +212,12 @@ export default function GlobalSearchScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-  center: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: SPACING.xxl },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: SPACING.xxl,
+  },
   searchRow: {
     flexDirection: "row",
     alignItems: "center",

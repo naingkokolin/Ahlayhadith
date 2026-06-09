@@ -19,19 +19,28 @@ export interface Ayah {
 
 // ─── Hadith ───────────────────────────────────────────────────────────────────
 
+export interface HadithBible {
+  _id: string;
+  bible_number: number;
+  name_ar: string;
+  name_mm: string;
+  name_en: string;
+}
+
 export interface HadithBook {
   _id: string;
+  bible: string | HadithBible;
   book_number: number;
   name_ar: string;
   name_mm: string;
   name_en: string;
-  author: string;
-  totalHadith: number;
+  // author: string;
+  // totalHadith: number;
 }
 
 export interface HadithChapter {
   _id: string;
-  book: string;
+  book: string | HadithBook;
   chapter_number: number;
   name_ar: string;
   name_mm: string;

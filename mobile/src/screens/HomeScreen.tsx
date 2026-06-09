@@ -44,7 +44,8 @@ export default function HomeScreen({ navigation }: Props) {
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </Text>
         <Text style={styles.bismillahMm}>
-          သနားကြင်နာ ညာဏ်တော်ကြီးမားသော အလ်လာဟ်၏ နာမဖြင့်
+          သနားကြင်နာ ညှာတာတော်မူသော၊ အနန္တ ဂရုဏာတော်ရှင်ဖြစ်တော်မူသော
+          အလ္လာဟ်အရှင်မြတ်၏ နာမတော်ဖြင့် အစပြုပါ၏
         </Text>
       </View>
 
@@ -69,7 +70,7 @@ export default function HomeScreen({ navigation }: Props) {
           <View style={styles.cardOverlay}>
             <Text style={styles.cardArabic}>الْقُرْآن</Text>
             <Text style={styles.cardTitle}>ကုရ်အာန်</Text>
-            <Text style={styles.cardSub}>114 Surahs</Text>
+            {/* <Text style={styles.cardSub}>114 Surahs</Text> */}
           </View>
         </TouchableOpacity>
 
@@ -89,7 +90,7 @@ export default function HomeScreen({ navigation }: Props) {
           <View style={styles.cardOverlay}>
             <Text style={styles.cardArabic}>الْحَدِيث</Text>
             <Text style={styles.cardTitle}>ဟဒီးဆ်</Text>
-            <Text style={styles.cardSub}>4 အုပ်</Text>
+            {/* <Text style={styles.cardSub}>4 အုပ်</Text> */}
           </View>
         </TouchableOpacity>
       </View>
