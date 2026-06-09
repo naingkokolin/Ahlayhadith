@@ -53,15 +53,21 @@ export const HadithApi = {
   getBook: (id: string) =>
     request<{ book: HadithBook }>(`/hadith-books/${id}`).then((r) => r.book),
 
-  getChapters: (bookId: string) =>
-    request<{ chapters: HadithChapter[] }>(`/hadith-chapters/${bookId}`).then(
+  getChapter: (chapterId: string) =>
+    request<{ chapter: HadithChapter }>(`/hadith-chapters/${chapterId}`).then(
+      (r) => r.chapter,
+    ),
+
+  getChapters: () =>
+    request<{ chapters: HadithChapter[] }>("/hadith-chapters").then(
       (r) => r.chapters,
     ),
 
-  getHadiths: (chapterId: string) =>
-    request<{ hadiths: Hadith[] }>(`/hadiths/${chapterId}`).then(
-      (r) => r.hadiths,
-    ),
+  getHadith: (hadithId: string) =>
+    request<{ hadith: Hadith }>(`/hadiths/${hadithId}`).then((r) => r.hadith),
+
+  getHadiths: () =>
+    request<{ hadiths: Hadith[] }>("/hadiths").then((r) => r.hadiths),
 
   search: (query: string) =>
     request<{ data: SearchResult[] }>(
