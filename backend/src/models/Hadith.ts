@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IHadith {
   // remove extends Document
-  // bible: mongoose.Types.ObjectId;
+  bible: mongoose.Types.ObjectId;
   book: mongoose.Types.ObjectId;
   chapter: mongoose.Types.ObjectId;
   hadith_number: number;
@@ -13,6 +13,11 @@ export interface IHadith {
 
 const hadithSchema = new mongoose.Schema<IHadith>(
   {
+    bible: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "HadithBible",
+      required: true,
+    },
     book: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "HadithBook",

@@ -22,6 +22,8 @@ router
 // e.g. GET /api/hadith-chapters/book/:bookId
 router.get("/book/:bookId", validateId, getChaptersByBookId);
 
+// router.get("/book/:bookId", getChaptersByBookId);
+
 router
   .route("/:id")
   .all(validateId)

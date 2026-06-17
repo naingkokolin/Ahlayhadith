@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import HadithBook from "../models/HadithBook";
+import mongoose from "mongoose";
+// import mongoose, { ObjectId } from "mongoose";
 
 export const getAllHadithBooks = async (req: Request, res: Response) => {
   try {
@@ -15,6 +17,32 @@ export const getAllHadithBooks = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: `Error while getting Hadith Books: ${err.message}` });
+  }
+};
+
+export const getBooksByBibleId = async (req: Request, res: Response) => {
+  const { bibleId } = req.params;
+
+  try {
+    const books = await HadithBook.find({
+      bible: bibleId as string | mongoose.Types.ObjectId,
+    }).sort({
+      book_number: 1,
+    });
+
+    if (books.length === 0) {
+      return res.status(404).json({
+        message: `No books found for bible id: ${bibleId}`,
+      });
+    }
+
+    res.status(200).json({ books });
+  } catch (error) {
+    res.status(500).json({
+      error: `Error while getting books by bible id: ${
+        (error as Error).message
+      }`,
+    });
   }
 };
 

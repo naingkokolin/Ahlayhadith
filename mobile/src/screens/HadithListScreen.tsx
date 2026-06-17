@@ -21,8 +21,17 @@ export default function HadithListScreen({ route }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // useEffect(() => {
+  //   HadithApi.getHadiths()
+  //     .then(setHadiths)
+  //     .catch(() => setError("Failed to load hadiths"))
+  //     .finally(() => setLoading(false));
+  // }, [chapterId]);
+
+  // const { chapterId } = route.params;
+
   useEffect(() => {
-    HadithApi.getHadiths(chapterId)
+    HadithApi.getHadithsByChapter(chapterId)
       .then(setHadiths)
       .catch(() => setError("Failed to load hadiths"))
       .finally(() => setLoading(false));
@@ -37,7 +46,12 @@ export default function HadithListScreen({ route }: Props) {
           <Text style={styles.numberValue}>{item.hadith_number}</Text>
         </View>
         <Text style={styles.bookName}>{bookName}</Text>
-        <View style={[styles.gradeBadge, item.grade === "Sahih" && styles.gradeGreen]}>
+        <View
+          style={[
+            styles.gradeBadge,
+            item.grade === "Sahih" && styles.gradeGreen,
+          ]}
+        >
           <Text style={styles.gradeText}>{item.grade}</Text>
         </View>
       </View>

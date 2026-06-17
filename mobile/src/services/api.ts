@@ -12,7 +12,7 @@ import {
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 // Change this to your backend URL
-const BASE_URL = "https://ahlayhadith.onrender.com/api"; //"http://192.168.100.66:3000/api"; // "http://localhost:3000/api";
+const BASE_URL = "http://localhost:3000/api"; // "https://ahlayhadith.onrender.com/api"; //"http://192.168.100.66:3000/api"; // "http://localhost:3000/api";
 
 const request = async <T>(path: string): Promise<T> => {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -58,9 +58,24 @@ export const HadithApi = {
       (r) => r.chapter,
     ),
 
+  getBooksByBible: (bibleId: string) =>
+    request<{ books: HadithBook[] }>(`/hadith-books/bible/${bibleId}`).then(
+      (r) => r.books,
+    ),
+
   getChapters: () =>
     request<{ chapters: HadithChapter[] }>("/hadith-chapters").then(
       (r) => r.chapters,
+    ),
+
+  getChaptersByBook: (bookId: string) =>
+    request<{ chapters: HadithChapter[] }>(
+      `/hadith-chapters/book/${bookId}`,
+    ).then((r) => r.chapters),
+
+  getHadithsByChapter: (chapterId: string) =>
+    request<{ hadiths: Hadith[] }>(`/hadiths/chapter/${chapterId}`).then(
+      (r) => r.hadiths,
     ),
 
   getHadith: (hadithId: string) =>

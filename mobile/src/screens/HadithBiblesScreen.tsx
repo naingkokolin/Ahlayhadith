@@ -12,61 +12,51 @@ import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HadithStackParamList } from "../navigation/types";
 import { HadithApi } from "../services/api";
-import { HadithBook } from "../types";
+import { HadithBible } from "../types";
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from "../constants/theme";
 
-type Props = NativeStackScreenProps<HadithStackParamList, "HadithBooks">;
+type Props = NativeStackScreenProps<HadithStackParamList, "HadithBibles">;
 
-const BOOK_COLORS = [
-  "#1B6B4A", // Bukhari — green
-  "#8B4513", // Muslim — brown
-  "#1A3A6B", // Abu Dawud — navy
-  "#6B1A1A", // Tirmidhi — maroon
-];
+const BIBLE_COLORS = ["#1B6B4A", "#8B4513", "#1A3A6B", "#6B1A1A"];
 
-export default function HadithBooksScreen({ route, navigation }: Props) {
-  const [books, setBooks] = useState<HadithBook[]>([]);
+export default function HadithBiblesScreen({ navigation }: Props) {
+  const [bibles, setBibles] = useState<HadithBible[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { bibleId } = route.params;
-
-  // useEffect(() => {
-  //   HadithApi.getBooks()
-  //     .then(setBooks)
-  //     .catch(() => setError("Failed to load books"))
-  //     .finally(() => setLoading(false));
-  // }, []);
-
   useEffect(() => {
-    HadithApi.getBooksByBible(bibleId)
-      .then(setBooks)
-      .catch(() => setError("Failed to load books"))
+    HadithApi.getBibles()
+      .then(setBibles)
+      .catch(() => setError("Failed to load hadith collections"))
       .finally(() => setLoading(false));
-  }, [bibleId]);
+  }, []);
 
-  const renderItem = ({ item, index }: { item: HadithBook; index: number }) => {
-    const color = BOOK_COLORS[index % BOOK_COLORS.length];
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: HadithBible;
+    index: number;
+  }) => {
+    const color = BIBLE_COLORS[index % BIBLE_COLORS.length];
     return (
       <TouchableOpacity
         style={[styles.card, { borderLeftColor: color }]}
         onPress={() =>
-          navigation.navigate("HadithChapters", {
-            bookId: item._id,
-            bookName: item.name_mm,
+          navigation.navigate("HadithBooks", {
+            bibleId: item._id,
+            bibleName: item.name_mm,
           })
         }
         activeOpacity={0.7}
       >
         <View style={[styles.iconBox, { backgroundColor: color + "20" }]}>
-          <Ionicons name="book" size={28} color={color} />
+          <Ionicons name="library" size={28} color={color} />
         </View>
         <View style={styles.info}>
           <Text style={styles.nameAr}>{item.name_ar}</Text>
           <Text style={styles.nameMm}>{item.name_mm}</Text>
-          {/* <Text style={styles.meta}>
-            {item.author} · {item.totalHadith} ဟဒီး
-          </Text> */}
+          <Text style={styles.nameEn}>{item.name_en}</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
       </TouchableOpacity>
@@ -92,7 +82,7 @@ export default function HadithBooksScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <FlatList
-        data={books}
+        data={bibles}
         keyExtractor={(item) => item._id}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
@@ -135,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.text,
   },
-  meta: {
+  nameEn: {
     fontFamily: FONTS.regular,
     fontSize: 12,
     color: COLORS.textMuted,

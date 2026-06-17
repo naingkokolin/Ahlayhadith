@@ -25,9 +25,12 @@ export const getAllHadiths = async (req: Request, res: Response) => {
 export const getHadithsByChapterId = async (req: Request, res: Response) => {
   const { chapterId } = req.params;
   try {
-    const hadiths = await Hadith.find({ chapter: chapterId as string })
-      .populate("book")
-      .populate("chapter")
+    const hadiths = await Hadith.find({
+      chapter: chapterId as string,
+    })
+      .populate("bible", "_id")
+      .populate("book", "_id")
+      .populate("chapter", "_id") // remove _id from these to get the full object
       .sort({ hadith_number: 1 });
     if (hadiths.length === 0)
       return res.status(404).json({

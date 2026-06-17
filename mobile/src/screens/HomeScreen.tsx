@@ -78,7 +78,7 @@ export default function HomeScreen({ navigation }: Props) {
         <TouchableOpacity
           style={[styles.card, styles.hadithCard]}
           onPress={() =>
-            navigation.navigate("HadithStack", { screen: "HadithBooks" })
+            navigation.navigate("HadithStack", { screen: "HadithBibles" })
           }
           activeOpacity={0.85}
         >

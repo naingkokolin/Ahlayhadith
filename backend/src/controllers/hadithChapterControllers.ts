@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import HadithChapter from "../models/HadithChapter";
+import mongoose from "mongoose";
 
 export const getAllHadithChapters = async (req: Request, res: Response) => {
   try {
@@ -23,7 +24,9 @@ export const getAllHadithChapters = async (req: Request, res: Response) => {
 export const getChaptersByBookId = async (req: Request, res: Response) => {
   const { bookId } = req.params;
   try {
-    const chapters = await HadithChapter.find({ book: bookId as string }).sort({
+    const chapters = await HadithChapter.find({
+      book: bookId as string | mongoose.Types.ObjectId,
+    }).sort({
       chapter_number: 1,
     });
     if (chapters.length === 0)

@@ -8,7 +8,8 @@ export type QuranStackParamList = {
 
 // ─── Hadith Stack ─────────────────────────────────────────────────────────────
 export type HadithStackParamList = {
-  HadithBooks: undefined;
+  HadithBibles: undefined;
+  HadithBooks: { bibleId: string; bibleName: string };
   HadithChapters: { bookId: string; bookName: string };
   HadithList: { chapterId: string; chapterName: string; bookName: string };
 };

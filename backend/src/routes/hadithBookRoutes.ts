@@ -3,6 +3,7 @@ import {
   addHadithBook,
   deleteHadithBookById,
   getAllHadithBooks,
+  getBooksByBibleId,
   getHadithBookById,
   updateHadithBookById,
 } from "../controllers/hadithBookControllers";
@@ -11,7 +12,12 @@ import { validateId } from "../middlewares/validateId";
 
 const router = express.Router();
 
-router.route("/").get(getAllHadithBooks).post(validateHadithBook, addHadithBook);
+router
+  .route("/")
+  .get(getAllHadithBooks)
+  .post(validateHadithBook, addHadithBook);
+
+router.get("/bible/:bibleId", getBooksByBibleId);
 
 router
   .route("/:id")

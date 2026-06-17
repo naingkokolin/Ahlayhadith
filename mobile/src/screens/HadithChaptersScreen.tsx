@@ -27,8 +27,15 @@ export default function HadithChaptersScreen({ route, navigation }: Props) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
 
+  // useEffect(() => {
+  //   HadithApi.getChapters()
+  //     .then(setChapters)
+  //     .catch(() => setError("Failed to load chapters"))
+  //     .finally(() => setLoading(false));
+  // }, [bookId]);
+
   useEffect(() => {
-    HadithApi.getChapters(bookId)
+    HadithApi.getChaptersByBook(bookId)
       .then(setChapters)
       .catch(() => setError("Failed to load chapters"))
       .finally(() => setLoading(false));

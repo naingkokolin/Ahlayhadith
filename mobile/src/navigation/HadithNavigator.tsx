@@ -4,6 +4,7 @@ import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { HadithStackParamList } from "./types";
+import HadithBiblesScreen from "../screens/HadithBiblesScreen";
 import HadithBooksScreen from "../screens/HadithBooksScreen";
 import HadithChaptersScreen from "../screens/HadithChaptersScreen";
 import HadithListScreen from "../screens/HadithListScreen";
@@ -26,6 +27,11 @@ export default function HadithNavigator() {
         contentStyle: { backgroundColor: COLORS.background },
       })}
     >
+      <Stack.Screen
+        name="HadithBibles"
+        component={HadithBiblesScreen}
+        options={{ title: "Bibles" }}
+      />
       <Stack.Screen
         name="HadithBooks"
         component={HadithBooksScreen}
