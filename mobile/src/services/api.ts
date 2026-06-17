@@ -12,7 +12,7 @@ import {
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 // Change this to your backend URL
-const BASE_URL = "http://localhost:3000/api"; // "https://ahlayhadith.onrender.com/api"; //"http://192.168.100.66:3000/api"; // "http://localhost:3000/api";
+const BASE_URL = "https://ahlayhadith.onrender.com/api"; //"http://192.168.100.66:3000/api"; // "http://localhost:3000/api";
 
 const request = async <T>(path: string): Promise<T> => {
   const res = await fetch(`${BASE_URL}${path}`, {
