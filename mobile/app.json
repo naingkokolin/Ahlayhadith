@@ -21,13 +21,19 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nkkl.ahlayhadith"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single"
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "assetBundlePatterns": ["assets/**/*", "**/*"],
+    "plugins": ["expo-font"],
+    "extra": {
+      "eas": {
+        "projectId": "6fce5036-7704-488d-a244-563b976b8d27"
+      }
+    }
   }
 }
