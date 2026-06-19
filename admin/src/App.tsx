@@ -498,7 +498,7 @@ const App: React.FC = () => {
 
         {currentPage === "hadith-books" && (
           <HadithBooksPage
-            // bibles={hadithBibles}
+            bibles={hadithBibles}
             books={hadithBooks}
             onAdd={addHadithBook}
             onUpdate={updateHadithBook}

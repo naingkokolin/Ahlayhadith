@@ -41,7 +41,7 @@ export default function HadithBooksScreen({ route, navigation }: Props) {
   useEffect(() => {
     HadithApi.getBooksByBible(bibleId)
       .then(setBooks)
-      .catch(() => setError("Failed to load books"))
+      .catch(() => setError("Something wrong! Failed to load books"))
       .finally(() => setLoading(false));
   }, [bibleId]);
 
