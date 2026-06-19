@@ -70,11 +70,9 @@ export default function HadithChaptersScreen({ route, navigation }: Props) {
       </View>
       <View style={styles.info}>
         <Text style={styles.nameMm}>{item.name_mm}</Text>
-        <Text style={styles.nameEn}>
-          {item.name_en} · {item.totalHadith} ဟဒီးဆ်
-        </Text>
+        <Text style={styles.nameEn}>{item.totalHadith} . ဟဒီးဆ်</Text>
       </View>
-      <Text style={styles.nameAr}>{item.name_ar}</Text>
+      {/* <Text style={styles.nameAr}>{item.name_ar}</Text> */}
     </TouchableOpacity>
   );
 
