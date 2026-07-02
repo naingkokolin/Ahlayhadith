@@ -81,8 +81,12 @@ export interface IHadith {
 }
 
 /** Safely extract _id from a possibly-populated ref field */
-export const getRefId = (ref: string | { _id?: string }): string =>
-  typeof ref === "string" ? ref : (ref._id ?? "");
+// export const getRefId = (ref: string | { _id?: string }): string =>
+//   typeof ref === "string" ? ref : (ref._id ?? "");
+
+export const getRefId = (
+  ref: string | { _id?: string } | null | undefined,
+): string => (!ref ? "" : typeof ref === "string" ? ref : (ref._id ?? ""));
 
 // ─── Navigation ───────────────────────────────────────────────
 
