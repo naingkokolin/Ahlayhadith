@@ -55,7 +55,7 @@ export interface IHadithBook {
 export interface IHadithChapter {
   _id?: string;
   // populated by Mongoose → can be full IHadithBook object or string id
-  // bible: string | IHadithBible;
+  bible: string | IHadithBible;
   book: string | IHadithBook;
   chapter_number: number;
   name_ar: string;
@@ -69,7 +69,7 @@ export interface IHadithChapter {
 export interface IHadith {
   _id?: string;
   // both populated by Mongoose
-  // bible: string | IHadithBible;
+  bible: string | IHadithBible;
   book: string | IHadithBook;
   chapter: string | IHadithChapter;
   hadith_number: number;

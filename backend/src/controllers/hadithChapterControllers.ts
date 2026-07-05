@@ -46,7 +46,7 @@ export const getChaptersByBookId = async (req: Request, res: Response) => {
 export const addHadithChapter = async (req: Request, res: Response) => {
   try {
     const {
-      // bible,
+      bible,
       book,
       chapter_number,
       name_ar,
@@ -55,7 +55,7 @@ export const addHadithChapter = async (req: Request, res: Response) => {
       totalHadith,
     } = req.body;
     const newChapter = await HadithChapter.create({
-      // bible,
+      bible,
       book,
       chapter_number,
       name_ar,
@@ -126,3 +126,31 @@ export const deleteHadithChapterById = async (req: Request, res: Response) => {
     });
   }
 };
+
+// export const updateBibleKeyInAllChapters = async (
+//   req: Request,
+//   res: Response,
+// ) => {
+//   try {
+//     const targetBibleId = "6a2291a5a806a6d78c1605a5";
+//     const objectIdValue = new mongoose.Types.ObjectId(targetBibleId);
+
+//     const result = await HadithChapter.updateMany(
+//       { bible: { $exists: false } },
+//       { $set: { bible: objectIdValue } },
+//     );
+
+//     return res.status(200).json({
+//       message: "Successfully added bible key to documents",
+//       modifiedCount: result.modifiedCount,
+//     });
+//   } catch (error) {
+//     console.error("Update error:", error);
+//     return res
+//       .status(500)
+//       .json({
+//         message: "Internal Server Error",
+//         error: (error as Error).message,
+//       });
+//   }
+// };

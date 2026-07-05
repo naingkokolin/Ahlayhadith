@@ -13,6 +13,8 @@ import { validateId } from "../middlewares/validateId";
 
 const router = express.Router();
 
+// router.put("/bulk-update-hadith", updateBibleKeyInAllHadiths);
+
 // Search — must come before /:id to avoid conflict
 router.get("/search", searchHadiths);
 
