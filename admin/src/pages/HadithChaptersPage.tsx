@@ -14,7 +14,11 @@ interface Props {
 
 const PER_PAGE = 8;
 
-const EMPTY = (bookId: string): Omit<IHadithChapter, "_id"> => ({
+const EMPTY = (
+  bibleId: string,
+  bookId: string,
+): Omit<IHadithChapter, "_id"> => ({
+  bible: bibleId,
   book: bookId,
   chapter_number: 0,
   name_ar: "",
@@ -39,7 +43,7 @@ const HadithChaptersPage: React.FC<Props> = ({
   const [delOpen, setDelOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [delTarget, setDelTarget] = useState<IHadithChapter | null>(null);
-  const [form, setForm] = useState<Omit<IHadithChapter, "_id">>(EMPTY(""));
+  const [form, setForm] = useState<Omit<IHadithChapter, "_id">>(EMPTY("", ""));
   const [formError, setFormError] = useState("");
 
   // Get books filtered by selected Bible
@@ -82,7 +86,7 @@ const HadithChaptersPage: React.FC<Props> = ({
 
   const openAdd = () => {
     setEditingId(null);
-    setForm(EMPTY(selectedBookId));
+    setForm(EMPTY(selectedBibleId, selectedBookId));
     setFormError("");
     setModalOpen(true);
   };
@@ -90,6 +94,7 @@ const HadithChaptersPage: React.FC<Props> = ({
   const openEdit = (c: IHadithChapter) => {
     setEditingId(c._id ?? null);
     setForm({
+      bible: getRefId(c.bible),
       book: getRefId(c.book),
       chapter_number: c.chapter_number,
       name_ar: c.name_ar,

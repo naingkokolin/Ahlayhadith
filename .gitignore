@@ -7,3 +7,4 @@ backend/.env
 mobile/node_modules
 mobile/.env
 
+node_modules
