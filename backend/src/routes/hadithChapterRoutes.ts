@@ -12,6 +12,8 @@ import { validateId } from "../middlewares/validateId";
 
 const router = express.Router();
 
+// router.put("/bulk-update-hadith-chapter", updateBibleKeyInAllChapters);
+
 // GET all chapters / POST new chapter
 router
   .route("/")

@@ -401,18 +401,77 @@ const App: React.FC = () => {
   };
 
   // ── Hadith CRUD ────────────────────────────────────────────
+  // const addHadith = async (data: Omit<IHadith, "_id">) => {
+  //   try {
+  //     const res = await createHadith(data as IHadith);
+  //     setHadiths((prev) =>
+  //       [...prev, res.data.hadith].sort(
+  //         (a, b) => a.hadith_number - b.hadith_number,
+  //       ),
+  //     );
+  //   } catch {
+  //     setError("Failed to create hadith.");
+  //   }
+  // };
+
+  // const addHadith = async (data: Omit<IHadith, "_id">) => {
+  //   try {
+  //     // Find the next available hadith number for this book
+  //     const bookHadiths = hadiths.filter((h) => getRefId(h.book) === data.book);
+
+  //     // If hadith_number is 0 or already exists, auto-assign next number
+  //     let hadithData = { ...data };
+  //     if (
+  //       hadithData.hadith_number === 0 ||
+  //       bookHadiths.some((h) => h.hadith_number === hadithData.hadith_number)
+  //     ) {
+  //       const maxNumber =
+  //         bookHadiths.length > 0
+  //           ? Math.max(...bookHadiths.map((h) => h.hadith_number))
+  //           : 0;
+  //       hadithData.hadith_number = maxNumber + 1;
+  //     }
+
+  //     const res = await createHadith(hadithData as IHadith);
+  //     setHadiths((prev) =>
+  //       [...prev, res.data.hadith].sort(
+  //         (a, b) => a.hadith_number - b.hadith_number,
+  //       ),
+  //     );
+  //   } catch (err: any) {
+  //     // Better error handling
+  //     if (err.response?.data?.error?.includes("E11000 duplicate key error")) {
+  //       setError(
+  //         "A hadith with this number already exists in this book. Please try again with a different number.",
+  //       );
+  //     } else {
+  //       setError("Failed to create hadith. Please try again.");
+  //     }
+  //   }
+  // };
+
   const addHadith = async (data: Omit<IHadith, "_id">) => {
     try {
-      const res = await createHadith(data as IHadith);
+      // Don't calculate hadith_number here, let backend handle it
+      const res = await createHadith(data);
       setHadiths((prev) =>
         [...prev, res.data.hadith].sort(
           (a, b) => a.hadith_number - b.hadith_number,
         ),
       );
-    } catch {
-      setError("Failed to create hadith.");
+    } catch (err: any) {
+      console.error("Error adding hadith:", err.response?.data);
+      if (err.response?.data?.error?.includes("duplicate")) {
+        setError("A hadith with this number already exists in this book.");
+      } else {
+        setError(
+          "Failed to create hadith: " +
+            (err.response?.data?.error || err.message),
+        );
+      }
     }
   };
+
   const updateHadith = async (id: string, data: Omit<IHadith, "_id">) => {
     try {
       const res = await apiUpdateHadith(id, data);
@@ -508,6 +567,7 @@ const App: React.FC = () => {
 
         {currentPage === "hadith-chapters" && (
           <HadithChaptersPage
+            bibles={hadithBibles}
             books={hadithBooks}
             chapters={hadithChapters}
             onAdd={addHadithChapter}
@@ -518,6 +578,7 @@ const App: React.FC = () => {
 
         {currentPage === "hadiths" && (
           <HadithsPage
+            bibles={hadithBibles}
             books={hadithBooks}
             chapters={hadithChapters}
             hadiths={hadiths}

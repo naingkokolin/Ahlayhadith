@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { IHadithBook, IHadithChapter, getRefId } from "../types";
+import { IHadithBook, IHadithChapter, IHadithBible, getRefId } from "../types";
 import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
 
 interface Props {
+  bibles: IHadithBible[]; // Add this prop
   books: IHadithBook[];
   chapters: IHadithChapter[];
   onAdd: (chapter: Omit<IHadithChapter, "_id">) => void;
@@ -23,24 +24,40 @@ const EMPTY = (bookId: string): Omit<IHadithChapter, "_id"> => ({
 });
 
 const HadithChaptersPage: React.FC<Props> = ({
+  bibles, // Add this
   books,
   chapters,
   onAdd,
   onUpdate,
   onDelete,
 }) => {
-  const [selectedBookId, setSelectedBookId] = useState(books[0]?._id ?? "");
+  const [selectedBibleId, setSelectedBibleId] = useState(bibles[0]?._id ?? "");
+  const [selectedBookId, setSelectedBookId] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [delTarget, setDelTarget] = useState<IHadithChapter | null>(null);
-  const [form, setForm] = useState<Omit<IHadithChapter, "_id">>(
-    EMPTY(selectedBookId),
-  );
+  const [form, setForm] = useState<Omit<IHadithChapter, "_id">>(EMPTY(""));
   const [formError, setFormError] = useState("");
 
+  // Get books filtered by selected Bible
+  const bibleBooks = useMemo(() => {
+    return books.filter((b) => getRefId(b.bible) === selectedBibleId);
+  }, [books, selectedBibleId]);
+
+  // Auto-select first book when bible changes
+  React.useEffect(() => {
+    const firstBook = bibleBooks[0];
+    if (firstBook) {
+      setSelectedBookId(firstBook._id as string); // added as string
+    } else {
+      setSelectedBookId("");
+    }
+  }, [selectedBibleId, bibleBooks]);
+
+  const selectedBible = bibles.find((b) => b._id === selectedBibleId);
   const currentBook = books.find((b) => b._id === selectedBookId);
 
   const filtered = useMemo(() => {
@@ -69,6 +86,7 @@ const HadithChaptersPage: React.FC<Props> = ({
     setFormError("");
     setModalOpen(true);
   };
+
   const openEdit = (c: IHadithChapter) => {
     setEditingId(c._id ?? null);
     setForm({
@@ -106,32 +124,63 @@ const HadithChaptersPage: React.FC<Props> = ({
       <div style={styles.topbar}>
         <div>
           <div style={styles.title}>Hadith Chapters</div>
-          <div style={styles.sub}>Manage chapters by book</div>
+          <div style={styles.sub}>Manage chapters by bible and book</div>
         </div>
-        <button className="btn btn-primary" onClick={openAdd}>
+        <button
+          className="btn btn-primary"
+          onClick={openAdd}
+          disabled={!selectedBookId}
+        >
           + Add Chapter
         </button>
       </div>
 
       <div style={styles.content}>
-        {/* Book selector */}
+        {/* Bible and Book selectors */}
         <div style={styles.selectorBar}>
-          <span style={styles.selectorLabel}>Book:</span>
-          <select
-            className="select-input"
-            value={selectedBookId}
-            onChange={(e) => {
-              setSelectedBookId(e.target.value);
-              setPage(1);
-              setSearch("");
-            }}
-          >
-            {books.map((b) => (
-              <option key={b._id} value={b._id}>
-                {b.book_number}. {b.name_en}
-              </option>
-            ))}
-          </select>
+          <div style={styles.selectorGroup}>
+            <span style={styles.selectorLabel}>Bible:</span>
+            <select
+              className="select-input"
+              value={selectedBibleId}
+              onChange={(e) => {
+                setSelectedBibleId(e.target.value);
+                setPage(1);
+                setSearch("");
+              }}
+            >
+              {bibles.map((b) => (
+                <option key={b._id} value={b._id}>
+                  {b.name_en} ({b.name_ar})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={styles.selectorGroup}>
+            <span style={styles.selectorLabel}>Book:</span>
+            <select
+              className="select-input"
+              value={selectedBookId}
+              onChange={(e) => {
+                setSelectedBookId(e.target.value);
+                setPage(1);
+                setSearch("");
+              }}
+              disabled={!bibleBooks.length}
+            >
+              {bibleBooks.length === 0 ? (
+                <option value="">No books available</option>
+              ) : (
+                bibleBooks.map((b) => (
+                  <option key={b._id} value={b._id}>
+                    {b.book_number}. {b.name_en}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+
           <input
             className="search-input"
             placeholder="Search chapter..."
@@ -146,9 +195,11 @@ const HadithChaptersPage: React.FC<Props> = ({
         <div className="table-card">
           <div className="table-header">
             <div className="table-title">
-              {currentBook
-                ? `${currentBook.name_en} — ${currentBook.name_ar}`
-                : "Chapters"}
+              {selectedBible && currentBook
+                ? `${selectedBible.name_en} → ${currentBook.name_en} — ${currentBook.name_ar}`
+                : selectedBible
+                  ? `${selectedBible.name_en} — Select a book`
+                  : "Chapters"}
             </div>
             <span className="badge badge-gold">{filtered.length} chapters</span>
           </div>
@@ -167,7 +218,9 @@ const HadithChaptersPage: React.FC<Props> = ({
               {slice.length === 0 ? (
                 <tr>
                   <td colSpan={6} style={styles.empty}>
-                    No chapters found
+                    {selectedBookId
+                      ? "No chapters found"
+                      : "Select a bible and book to view chapters"}
                   </td>
                 </tr>
               ) : (
@@ -237,19 +290,67 @@ const HadithChaptersPage: React.FC<Props> = ({
       >
         <div style={styles.formGrid}>
           <div className="field-wrap">
+            <label className="field-label">Bible</label>
+            <select
+              className="field-input select-input"
+              value={(() => {
+                // Find which bible the selected book belongs to
+                const selectedBook = books.find(
+                  (b) => b._id === (form.book as string),
+                );
+                return selectedBook ? getRefId(selectedBook.bible) : "";
+              })()}
+              onChange={(e) => {
+                const bibleId = e.target.value;
+                // Find first book of selected bible
+                const firstBook = books.find(
+                  (b) => getRefId(b.bible) === bibleId,
+                );
+                if (firstBook) {
+                  set("book", firstBook._id as string);
+                } else {
+                  set("book", "");
+                }
+              }}
+            >
+              <option value="">Select a bible...</option>
+              {bibles.map((b) => (
+                <option key={b._id} value={b._id}>
+                  {b.name_en} ({b.name_ar})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field-wrap">
             <label className="field-label">Book</label>
             <select
               className="field-input select-input"
               value={form.book as string}
               onChange={(e) => set("book", e.target.value)}
             >
-              {books.map((b) => (
-                <option key={b._id} value={b._id}>
-                  {b.book_number}. {b.name_en}
-                </option>
-              ))}
+              <option value="">Select a book...</option>
+              {books
+                .filter((b) => {
+                  // Filter books by selected bible
+                  const selectedBookBible = (() => {
+                    const selectedBook = books.find(
+                      (bk) => bk._id === (form.book as string),
+                    );
+                    return selectedBook
+                      ? getRefId(selectedBook.bible)
+                      : selectedBibleId;
+                  })();
+                  return getRefId(b.bible) === selectedBookBible;
+                })
+                .map((b) => (
+                  <option key={b._id} value={b._id}>
+                    {b.book_number}. {b.name_en}
+                  </option>
+                ))}
             </select>
           </div>
+
           <div className="field-wrap">
             <label className="field-label">Chapter Number</label>
             <input
@@ -261,6 +362,7 @@ const HadithChaptersPage: React.FC<Props> = ({
               placeholder="e.g. 1"
             />
           </div>
+
           <div className="field-wrap" style={{ gridColumn: "span 2" }}>
             <label className="field-label">Arabic Name</label>
             <input
@@ -272,6 +374,7 @@ const HadithChaptersPage: React.FC<Props> = ({
               style={{ direction: "rtl", fontSize: 18 }}
             />
           </div>
+
           <div className="field-wrap">
             <label className="field-label">English Name</label>
             <input
@@ -282,6 +385,7 @@ const HadithChaptersPage: React.FC<Props> = ({
               placeholder="e.g. The Book of Faith"
             />
           </div>
+
           <div className="field-wrap">
             <label className="field-label">Myanmar Name</label>
             <input
@@ -292,6 +396,7 @@ const HadithChaptersPage: React.FC<Props> = ({
               placeholder="Myanmar name..."
             />
           </div>
+
           <div className="field-wrap" style={{ gridColumn: "span 2" }}>
             <label className="field-label">Total Hadith</label>
             <input
@@ -307,7 +412,7 @@ const HadithChaptersPage: React.FC<Props> = ({
         {formError && <div style={styles.formError}>{formError}</div>}
       </Modal>
 
-      {/* Delete Modal */}
+      {/* Delete Modal - unchanged */}
       <Modal
         open={delOpen}
         onClose={() => setDelOpen(false)}
@@ -366,12 +471,19 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 10,
     alignItems: "center",
     marginBottom: 20,
+    flexWrap: "wrap",
+  },
+  selectorGroup: {
+    display: "flex",
+    gap: 6,
+    alignItems: "center",
   },
   selectorLabel: {
     fontSize: 12,
     color: "var(--text3)",
     letterSpacing: 1,
     textTransform: "uppercase",
+    whiteSpace: "nowrap",
   },
   formGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 14px" },
   formError: { color: "var(--danger)", fontSize: 12, marginTop: 8 },
