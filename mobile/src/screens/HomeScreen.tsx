@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation }: Props) {
       </View>
 
       {/* Section title */}
-      <Text style={styles.sectionTitle}>ရွေးချယ်ပါ</Text>
+      <Text style={styles.sectionTitle}>ဖတ်ရှူရန် ရွေးချယ်ပါ</Text>
 
       {/* Two main buttons */}
       <View style={styles.buttonRow}>
@@ -63,7 +63,7 @@ export default function HomeScreen({ navigation }: Props) {
           activeOpacity={0.85}
         >
           <Image
-            source={require("../../assets/quran_cover.png")}
+            source={require("../../assets/quran.png")}
             style={styles.cardImage}
             resizeMode="cover"
           />
@@ -83,7 +83,7 @@ export default function HomeScreen({ navigation }: Props) {
           activeOpacity={0.85}
         >
           <Image
-            source={require("../../assets/hadith_cover.png")}
+            source={require("../../assets/hadith.png")}
             style={styles.cardImage}
             resizeMode="cover"
           />

@@ -63,7 +63,7 @@ export default function SplashScreen({ navigation }: Props) {
       >
         {/* Replace with your actual logo asset */}
         <Image
-          source={require("../../assets/logo.png")}
+          source={require("../../assets/splash_circle.png")}
           style={styles.logo}
           resizeMode="contain"
         />
