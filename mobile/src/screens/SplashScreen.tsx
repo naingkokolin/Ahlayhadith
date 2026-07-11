@@ -55,6 +55,11 @@ export default function SplashScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      {/* Decorative Arabic text */}
+      <Animated.Text style={[styles.bismillah, { opacity: textOpacity }]}>
+        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+      </Animated.Text>
+
       <Animated.View
         style={[
           styles.logoWrapper,
@@ -73,11 +78,6 @@ export default function SplashScreen({ navigation }: Props) {
         <Text style={styles.title}>ကုရ်အာန် နှင့် ဟဒီးဆ် (မြန်မာ)</Text>
         <Text style={styles.subtitle}>Quran & Hadith — Myanmar</Text>
       </Animated.View>
-
-      {/* Decorative Arabic text */}
-      <Animated.Text style={[styles.bismillah, { opacity: textOpacity }]}>
-        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-      </Animated.Text>
     </View>
   );
 }
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: SPACING.xl,
+    position: "relative",
   },
   logoWrapper: {
     width: 140,
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
   },
   bismillah: {
     position: "absolute",
-    bottom: SPACING.xl,
+    top: SPACING.xl,
+    // bottom: SPACING.xl,
     fontFamily: FONTS.arabic,
     fontSize: 22,
     color: "rgba(255,255,255,0.5)",

@@ -7,8 +7,9 @@ import {
   Image,
   StatusBar,
   Dimensions,
-  SafeAreaView,
+  // SafeAreaView
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../navigation/types";
@@ -50,7 +51,7 @@ export default function HomeScreen({ navigation }: Props) {
       </View>
 
       {/* Section title */}
-      <Text style={styles.sectionTitle}>ဖတ်ရှူရန် ရွေးချယ်ပါ</Text>
+      <Text style={styles.sectionTitle}>ရွေးချယ်ပါ</Text>
 
       {/* Two main buttons */}
       <View style={styles.buttonRow}>
