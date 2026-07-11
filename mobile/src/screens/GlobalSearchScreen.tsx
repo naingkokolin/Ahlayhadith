@@ -7,7 +7,6 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
-  // SafeAreaView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
