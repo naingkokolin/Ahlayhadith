@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Ahlay Hadith",
+    "name": "Sahih Muslim",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,14 +22,19 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.nkkl.ahlayhadith"
+      "package": "com.ahlayhadith.ahlayhadith"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "output": "single"
     },
-    "assetBundlePatterns": ["assets/**/*", "**/*"],
-    "plugins": ["expo-font"],
+    "assetBundlePatterns": [
+      "assets/**/*",
+      "**/*"
+    ],
+    "plugins": [
+      "expo-font"
+    ],
     "extra": {
       "eas": {
         "projectId": "6fce5036-7704-488d-a244-563b976b8d27"
